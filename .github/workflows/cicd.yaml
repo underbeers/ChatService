@@ -48,7 +48,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_chat_service:v1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_chat_service:v2
 
   deploy:
     name: Deploy

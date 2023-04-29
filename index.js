@@ -96,10 +96,12 @@ io.on("connection", async (socket) => {
 
   // forward the private message to the right recipient (and to other tabs of the sender)
   socket.on("private message", ({ content, to }) => {
+    const messageTime = new Date();
     const message = {
       content,
       from: socket.userID,
       to,
+      time: messageTime.toJSON()
     };
     socket.to(to).to(socket.userID).emit("private message", message);
     messageStore.saveMessage(message);
