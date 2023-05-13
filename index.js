@@ -103,7 +103,11 @@ io.on("connection", async (socket) => {
       to,
       time: messageTime.toJSON()
     };
-    socket.to(to).to(socket.userID).emit("private message", message);
+    console.log(`private message from ${socket.userID} to ${to}`);
+    if (to !== socket.userID) {
+      io.to(socket.userID).emit("private message", message);
+    }
+    io.to(to).emit("private message", message);
     messageStore.saveMessage(message);
   });
 

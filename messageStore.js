@@ -15,7 +15,7 @@ class InMemoryMessageStore extends MessageStore {
 
   findMessagesForUser(userID) {
     return this.messages.filter(
-      ({ from, to }) => from === userID || to === userID
+      ({ from, to }) => ((from === userID || to === userID) && from !== to || from === userID && from == to)
     );
   }
 }
@@ -30,13 +30,21 @@ class RedisMessageStore extends MessageStore {
 
   saveMessage(message) {
     const value = JSON.stringify(message);
-    this.redisClient
+    if (message.from !== message.to) {
+      this.redisClient
       .multi()
       .rpush(`messages:${message.from}`, value)
       .rpush(`messages:${message.to}`, value)
       .expire(`messages:${message.from}`, CONVERSATION_TTL)
       .expire(`messages:${message.to}`, CONVERSATION_TTL)
       .exec();
+    } else {
+      this.redisClient
+      .multi()
+      .rpush(`messages:${message.from}`, value)
+      .expire(`messages:${message.from}`, CONVERSATION_TTL)
+      .exec();
+    }
   }
 
   findMessagesForUser(userID) {
