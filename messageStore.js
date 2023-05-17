@@ -20,7 +20,7 @@ class InMemoryMessageStore extends MessageStore {
   }
 }
 
-const CONVERSATION_TTL = 24 * 60 * 60;
+const CONVERSATION_TTL = 365 * 24 * 60 * 60;
 
 class RedisMessageStore extends MessageStore {
   constructor(redisClient) {
